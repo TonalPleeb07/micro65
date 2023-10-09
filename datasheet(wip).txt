@@ -1,0 +1,132 @@
+MPU Clocks, specs, and timings
+	W65C02S
+	PHI2 - 1.0MHz or 2.5 MHz
+    Total Clock Time - 1000ns or 400ns
+    Address Timings - 770ns or 300ns Total, ~400 or ~290 Used
+
+RS232 port specs (DB-9)
+	MAX232N voltage driver
+	W65C51 Asynchronous Communication Interface Adapter
+	DB-9 connector
+	NO INTERRUPTS, PARITY, OR ECHO!!!
+
+Memory Banking Setup (3-to-8 Decoder, OR for RAM and ROM, RAM AND'ed with PHI2, all final signals inverted if necessary)
+
+	$0000 - $3fff
+		000 - RAM
+		001 - RAM
+    $4000 - $7fff
+		010 - VIA
+		011 - ACIA
+	$8000 - $bfff
+		100 - USP1
+		101 - USP2
+	$c000- $ffff
+		110 - ROM (c000-dfff contains the same code as e000-ffff)
+		111 - ROM
+
+8KiB per bank, 16K RAM, 8K or 16K ROM, plus 16K total available user port space.
+
+User Specified Port Pinout (USP2)
+VDD 	1   2	R/W
+USP1	3   4 	PHI2
+A0		5   6 	D0
+A1		7   8 	D1
+A2		9  10 	D2
+A3		11 12 	D3
+A4		13 14 	D4
+A5		15 16 	D5
+A6		17 18 	D6
+A7		19 20 	D7
+A8      21 22   PA0
+A9      23 24   PA1
+A10     25 26   PA2
+A11     27 28   PA3
+A12     29 30   PA4
+A13     31 32   PA5
+A14     33 34   PA6
+A15     35 36   PA7
+GND     37 38   IRQ
+GND     39 40   GND
+
+User Specified Port Pinout (USP2)
+VDD 	1   2	R/W
+USP2	3   4 	PHI2
+A0		5   6 	D0
+A1		7   8 	D1
+A2		9  10 	D2
+A3		11 12 	D3
+A4		13 14 	D4
+A5		15 16 	D5
+A6		17 18 	D6
+A7		19 20 	D7
+A8      21 22   PB0
+A9      23 24   PB1
+A10     25 26   PB2
+A11     27 28   PB3
+A12     29 30   PB4
+A13     31 32   PB5
+A14     33 34   PB6
+A15     35 36   PB7
+GND     37 38   IRQ
+GND     39 40   GND
+
+User Specified Cards
+
+	Sound Card
+		This card would be simple to design, hard to produce. There are two main methods of doing this, and both have a fair amount of problems. 
+
+		The first is to build a DAC (or use a dedicated chip) with an amplifier and sound buffer/register. This would be good, however, it would most likely require external power, as the internal voltage regulator can only provide 1.5A of current at 5 volts.
+
+		The second option is sourcing a new-old-stock sound chip from the Commodore 64, the SID chip, and interfacing it. This would be better for compatibility, and nearly eliminate the power issues, however, these chips are near-impossible to find now, and I would most likely need usersr to supply this chip on their own.
+		
+	Video Card (NOT HAPPENING):
+		This... is very difficult. I currently have two possible ideas for a video card, those being a microcontroller-based VGA (CGA-C) card, or a direct-controlled parallel-to-NTSC video card. 
+
+		The microcontroller card would defeat the purpose of this project, however, it would provide much greater standalone functionality. 
+
+		The composite card would be very, very basic, only 40x20 monochrome, and would most likely still work via bitbanging, preventing any bit-mapped modes or even character editing, due to the absence of VRAM.
+	
+	Input Card:
+		This one should be fairly simple, a PS/2 connector, some 74HC595 SIPO shift registers, and a bit of decoding logic for my OS. Although, programming interrupts into the computer could be difficult. I may consider using Ben Eater's approach, in which the system goes into a forever loop until broken by a keypress.
+
+OS Development:
+	Although I suck at interpreting user commands in a BASIC operating system, I am going to give it a try. Currently, I am working on two versions of this OS. One that accepts a keyboard card, and one that is purely serial. This allows for support of many different configurations, as well as making development considerably easier. Eventually, I do hope to streamline these forks into one code, with the code automatically detecting if the computer has a keyboard card installed. So far, the BASIC system is very... basic. No, really, it only can accept data and print data directly to the screen. In the future I do hope to implement these instructions (and the code supporting them) to the OS:
+	
+	PR <text to print>: Print a message or value on the screen.
+	
+	RD <min positive integer value>,<max positive integer value>: Generate a random number within the specified range.
+	
+	CL <new lines to print>: Clear the screen and print a number of new lines.
+	
+	AD <positive integer value #1>,<positive integer value #2>: Add two numbers.
+	
+	SB <positive integer value #1>,<positive integer value #2>: Subtract two numbers.
+	
+	ML <positive integer value #1>,<positive integer value #2>: Multiply two numbers.
+	
+	DI <positive integer value #1>,<positive integer value #2>: Divide two numbers.
+	
+	GO <hexadecimal RAM address>: Jump to a specific memory address.
+	
+	WR <hexadecimal RAM address>,<hexadecimal data value>: Write data to a memory address.
+	
+	RE <first hexadecimal RAM address>,<last hexadecimal RAM address (optional, if 0 then only print first address)>: Read data from a memory address or a range of addresses.
+	
+	FI <how many bytes to write (starting at the current address)>,<byte to write>: Fill memory with a specified value.
+	
+	IF <condition> THEN <action> ELSE <alternative action>: Conditional branching.
+	
+	STOP: Halt program execution.
+	
+	LN <string variable from IN operation>: Get the length of a string.
+	
+	CV <string expression>: Convert a string to a numeric value.
+	
+	IN <user input text>: Read a string from the user and store it in a variable.
+
+
+
+
+
+
