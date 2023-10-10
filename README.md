@@ -128,8 +128,9 @@ OS Development:
 	IN <user input text>: Read a string from the user and store it in a variable.
 
 # Schematics & PCBs
+<img src = "https://github.com/TonalPleeb07/micro65/assets/91705818/32a71ae3-18e6-48ee-a6d9-90f8dc0533f0">
 
-
+<img src = "https://github-production-user-asset-6210df.s3.amazonaws.com/91705818/273740027-fec8a5d7-bbec-484c-8057-fc660f7d58a0.png">
 
 
 
